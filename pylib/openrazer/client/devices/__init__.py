@@ -479,6 +479,16 @@ class RazerDevice(object):
         if self.has('battery'):
             return bool(self._dbus_interfaces['power'].isCharging())
 
+    @property
+    def is_docked(self) -> bool:
+        """
+        Get whether the device is docked or not
+
+        :return: Boolean
+        """
+        if self.has('battery'):
+            return bool(self._dbus_interfaces['power'].isDocked())
+
     def set_idle_time(self, idle_time) -> None:
         """
         Sets the idle time on the device

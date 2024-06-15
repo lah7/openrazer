@@ -15,6 +15,7 @@ declare -A files_metadata=(
     ["charge_level"]="r;255"
     ["charge_low_threshold"]="rw;38"
     ["charge_status"]="r;1"
+    ["docked_status"]="r;1"
     ["charging_led_brightness"]="rw;0"
     ["charging_matrix_effect_breath"]="w;"
     ["charging_matrix_effect_none"]="w;"

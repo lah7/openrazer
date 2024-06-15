@@ -1275,6 +1275,26 @@ static ssize_t razer_attr_read_charge_status(struct device *dev, struct device_a
 }
 
 /**
+ * Read device file "is_docked"
+ *
+ * Returns 0 when not docked, 1 when docked (charging)
+ */
+static ssize_t razer_attr_read_docked_status(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct razer_mouse_device *device = dev_get_drvdata(dev);
+    struct razer_report request = {0};
+    struct razer_report response = {0};
+
+    request = razer_chroma_misc_get_docked_status();
+
+    request.transaction_id.id = 0xFF;
+
+    razer_send_payload(device, &request, &response);
+
+    return sprintf(buf, "%d\n", response.arguments[1]);
+}
+
+/**
  * Write device file "set_charging_effect"
  *
  * Sets charging effect.
@@ -5484,6 +5504,7 @@ static int razer_mouse_probe(struct hid_device *hdev, const struct hid_device_id
         case USB_DEVICE_ID_RAZER_DEATHADDER_V2_PRO_WIRED:
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_charge_level);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_charge_status);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_docked_status);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_charge_low_threshold);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_device_idle_time);
             fallthrough;
@@ -6475,6 +6496,7 @@ static void razer_mouse_disconnect(struct hid_device *hdev)
         case USB_DEVICE_ID_RAZER_DEATHADDER_V2_PRO_WIRED:
             device_remove_file(&hdev->dev, &dev_attr_charge_level);
             device_remove_file(&hdev->dev, &dev_attr_charge_status);
+            device_remove_file(&hdev->dev, &dev_attr_docked_status);
             device_remove_file(&hdev->dev, &dev_attr_charge_low_threshold);
             fallthrough;
         case USB_DEVICE_ID_RAZER_VIPER:

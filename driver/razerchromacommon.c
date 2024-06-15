@@ -1070,6 +1070,16 @@ struct razer_report razer_chroma_misc_get_charging_status(void)
 }
 
 /**
+ * Gets docked status, for mice with docking stations (chargers)
+ *
+ * 0->1 is in arg[1]
+ */
+struct razer_report razer_chroma_misc_get_docked_status(void)
+{
+    return get_razer_report(0x07, 0xbb, 0x02);
+}
+
+/**
  * Set the charging effect, think if I remember correctly, it's either static colour, or "whatever the mouse was last on"
  */
 struct razer_report razer_chroma_misc_set_dock_charge_type(unsigned char charge_type)

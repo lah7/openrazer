@@ -2,6 +2,7 @@
 
 import math
 import struct
+
 from openrazer_daemon.dbus_services import endpoint
 
 
@@ -31,6 +32,19 @@ def is_charging(self):
     self.logger.debug("DBus call is_charging")
 
     driver_path = self.get_driver_path('charge_status')
+
+    with open(driver_path, 'r') as driver_file:
+        return bool(int(driver_file.read().strip()))
+
+
+@endpoint('razer.device.power', 'isDocked', out_sig='b')
+def is_docked(self):
+    """
+    Get docked status
+    """
+    self.logger.debug("DBus call is_docked")
+
+    driver_path = self.get_driver_path('docked_status')
 
     with open(driver_path, 'r') as driver_file:
         return bool(int(driver_file.read().strip()))
