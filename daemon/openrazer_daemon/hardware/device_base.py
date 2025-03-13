@@ -330,8 +330,13 @@ class RazerDevice(DBusService):
 
             # Some devices need setting a second time after encountering Razer Synapse on Windows
             if self.config.getboolean('Startup', "persistence_dual_boot_quirk") is True:
-                self.logger.debug("Restoring effect persistence again (dual boot quirk)")
+                self.logger.debug("Restoring persistence again (device quirk)")
+                time.sleep(0.5)
                 self.restore_effect()
+                time.sleep(0.25)
+                self.restore_dpi_poll_rate()
+                time.sleep(0.25)
+                self.restore_brightness()
 
     def send_effect_event(self, effect_name, *args):
         """
