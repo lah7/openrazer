@@ -1,0 +1,29 @@
+name: Package Build
+on:
+  push:
+  pull_request:
+
+jobs:
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # GitHub Actions already uses Ubuntu, build natively.
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+          sudo apt install debhelper dh-dkms dh-python linux-headers-generic python3-setuptools lsb-release dkms
+
+      - name: Build deb packages
+        run: |
+          ./scripts/build_debs.sh
+
+      - name: Upload deb packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-debs
+          path: build/*.deb
